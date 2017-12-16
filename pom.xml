@@ -16,9 +16,25 @@
 		<poi-tl.version>1.0.1-Beta1</poi-tl.version>
 		<xlsx-streamer.version>1.2.0</xlsx-streamer.version>
 		<guava.version>23.5-jre</guava.version>
+		<orika-core.version>1.5.2</orika-core.version>
+		<random-beans.version>3.7.0</random-beans.version>
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>io.github.benas</groupId>
+			<artifactId>random-beans</artifactId>
+			<version>${random-beans.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>${orika-core.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
