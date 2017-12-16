@@ -15,6 +15,11 @@ import org.slf4j.LoggerFactory;
 import com.monitorjbl.xlsx.StreamingReader;
 import com.poi.excel.ReadExcelWithXSSFReader;
 
+/**
+ * 测试读取Excel
+ * @author xiaogua
+ *
+ */
 public class TestXlsxStreamer {
 	private static final Logger log = LoggerFactory.getLogger(TestXlsxStreamer.class);
 	private static final String filePath = "src/test/resources/testExcel.xlsx";
