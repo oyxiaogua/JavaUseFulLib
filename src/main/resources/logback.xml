@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="20 seconds" debug="false">
+	<property name="PATH_LOG" value="d:/logs/" />
+	<property name="LOG_SAVE_DAYS" value="60" />
+	<property name="FilemaxFileSize" value="10MB" />
+	<property name="LOG_FMT" value="-%d{yyyy-MM-dd}.%i.log" />
+	<property name="ECAS_LOG" value="${PATH_LOG}javacode${LOG_FMT}" />
+	<property name="PATTERN"
+		value="%d{HH:mm:ss.SSS}[%thread][%level][%logger{30}][%C{30}->%M][%L] : %msg%n" />
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder charset="UTF-8">
+			<pattern>${PATTERN}</pattern>
+		</encoder>
+	</appender>
+	
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+	</root>
+
+	<logger name="org.apache" level="INFO" />
+	<logger name="org.springframework" level="INFO" />
+	<logger name="java.sql" level="INFO" />
+	<logger name="java.sql.Connection" level="DEBUG" />
+	<logger name="java.sql.PreparedStatement" level="DEBUG" />
+	<logger name="java.sql.ResultSet" level="DEBUG" />
+</configuration>
