@@ -18,10 +18,16 @@
 		<guava.version>23.5-jre</guava.version>
 		<orika-core.version>1.5.2</orika-core.version>
 		<random-beans.version>3.7.0</random-beans.version>
+		<mjson.version>1.4.1</mjson.version>
 	</properties>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>org.sharegov</groupId>
+			<artifactId>mjson</artifactId>
+			<version>${mjson.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>io.github.benas</groupId>
 			<artifactId>random-beans</artifactId>
