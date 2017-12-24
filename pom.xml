@@ -18,22 +18,75 @@
 		<guava.version>23.5-jre</guava.version>
 		<orika-core.version>1.5.2</orika-core.version>
 		<random-beans.version>3.7.0</random-beans.version>
+		<datagen.version>2.2.1</datagen.version>
 		<mjson.version>1.4.1</mjson.version>
+		<dfargx.version>0.2.1</dfargx.version>
+		<underscore-lodash.verion>1.24</underscore-lodash.verion>
+		<feilong-platform.version>1.10.6</feilong-platform.version>
+		<hutool.version>3.2.3</hutool.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>feilong-repository</id>
+			<url>https://raw.github.com/venusdrogon/feilong-platform/repository</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
+		<dependency>
+			<groupId>com.xiaoleilu</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>${hutool.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.feilong.platform</groupId>
+			<artifactId>feilong-core</artifactId>
+			<version>${feilong-platform.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.lukehutch</groupId>
+			<artifactId>fast-classpath-scanner</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.javadev</groupId>
+			<artifactId>underscore-lodash</artifactId>
+			<version>${underscore-lodash.verion}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>top.yatt.dfargx</groupId>
+			<artifactId>dfargx</artifactId>
+			<version>${dfargx.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.sharegov</groupId>
 			<artifactId>mjson</artifactId>
 			<version>${mjson.version}</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>io.qala.datagen</groupId>
+			<artifactId>qala-datagen-java8types</artifactId>
+			<version>${datagen.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.qala.datagen</groupId>
+			<artifactId>qala-datagen</artifactId>
+			<version>${datagen.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>io.github.benas</groupId>
 			<artifactId>random-beans</artifactId>
 			<version>${random-beans.version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>

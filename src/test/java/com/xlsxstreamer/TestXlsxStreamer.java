@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.monitorjbl.xlsx.StreamingReader;
 import com.poi.excel.ReadExcelWithXSSFReader;
+import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 
 /**
  * 测试读取Excel
@@ -28,6 +29,11 @@ public class TestXlsxStreamer {
 	public void testReadXlsxWithXSSFReader() throws Exception {
 		ReadExcelWithXSSFReader t=new ReadExcelWithXSSFReader();
 		t.process(filePath);
+	}
+	
+	@Test
+	public void testReadXlsxWithHutoolExcelUtil() throws Exception {
+		ExcelUtil.read07BySax(new File(filePath), 0, new PrintExcelRowHandler());
 	}
 
 	@Test

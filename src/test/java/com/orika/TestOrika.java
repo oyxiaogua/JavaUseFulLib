@@ -6,6 +6,10 @@ import java.time.LocalTime;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.poitl.MyTableDataRenderPolicy;
 
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
@@ -15,6 +19,8 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.property.PropertyResolver;
 
 public class TestOrika {
+	private static final Logger log = LoggerFactory.getLogger(MyTableDataRenderPolicy.class);
+
 	@Test
 	public void testOrika() {
 		// 生成随机内容
@@ -52,5 +58,11 @@ public class TestOrika {
 		Assert.assertEquals(person.getNameList().get(0).getLast(), personDest.getNameArr()[0][1]);
 		Assert.assertEquals(person.getNameList().get(1).getFirst(), personDest.getNameArr()[1][0]);
 		Assert.assertEquals(person.getNameList().get(1).getLast(), personDest.getNameArr()[1][1]);
+	}
+	
+	@Test
+	public void testDataGen() {
+		Person person = Person.random();
+		log.info("person={}",person);
 	}
 }
