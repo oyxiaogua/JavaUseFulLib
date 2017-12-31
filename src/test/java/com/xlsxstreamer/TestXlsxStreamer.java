@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.monitorjbl.xlsx.StreamingReader;
 import com.poi.excel.ReadExcelWithXSSFReader;
+import com.poi.excel.RowColLimitCheck;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 
 /**
@@ -56,6 +58,15 @@ public class TestXlsxStreamer {
 				log.info("row={}", sb.toString());
 			}
 		}
+		IOUtils.closeQuietly(is);
+	}
+	
+	@Test
+	public void testCheckXlsRowNum() throws Exception {
+		InputStream is=new FileInputStream(new File(filePath));
+		String result=RowColLimitCheck.checkRowColCount(is, "xlsx", 3, 27, 9);
+		log.info("result={}",result);
+		IOUtils.closeQuietly(is);
 	}
 
 }
