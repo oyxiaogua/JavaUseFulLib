@@ -2,13 +2,22 @@ package com.xlsxstreamer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,4 +78,39 @@ public class TestXlsxStreamer {
 		IOUtils.closeQuietly(is);
 	}
 
+	@Test
+	public void testWriteExcel() throws Exception {
+		SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(1000);
+		SXSSFCell sxssfCell = null;
+		SXSSFRow sxssfRow = null;
+		SXSSFSheet sheet = sxssfWorkbook.createSheet("sheet1");
+		sxssfRow = sheet.createRow(0);
+		List<Map<String, String>> dataList = new ArrayList<Map<String, String>>();
+		Map<String, String> dataMap = null;
+		Iterator<Map.Entry<String, String>> iterator = null;
+		Map.Entry<String, String> entry = null;
+		for (int i = 1, len = dataList.size(); i <= len; i++) {
+			sxssfRow = sheet.createRow(i);
+			dataMap = dataList.get(i - 1);
+			if(dataMap==null){
+				continue;
+			}
+			iterator = dataMap.entrySet().iterator();
+			int cell = 0;
+			while (iterator.hasNext()) {
+				entry = iterator.next();
+				sxssfCell = sxssfRow.createCell(cell);
+				sxssfCell.setCellValue(entry.getValue());
+				cell++;
+			}
+			dataMap.clear();
+		}
+		dataList.clear();
+		dataList = null;
+
+		FileOutputStream fos = new FileOutputStream("sys_"+System.currentTimeMillis()+".xlsx");
+		sxssfWorkbook.write(fos);
+		fos.close();
+		sxssfWorkbook.close();
+	}
 }
