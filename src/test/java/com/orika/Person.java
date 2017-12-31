@@ -93,9 +93,13 @@ public class Person {
 	}
 
 	public String toString() {
+		testMethod();
 		return "Person [age=" + age + ", address=" + address + ", money=" + money + ", name=" + name + ", nameList="
 				+ nameList + ", nameStrList=" + nameStrList + ", birthDate=" + birthDate + "]";
 	}
 
+	private void testMethod(){
+		
+	}
 	
 }

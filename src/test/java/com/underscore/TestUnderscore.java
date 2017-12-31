@@ -20,6 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import com.github.underscore.$;
 import com.github.underscore.Function1;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.poitl.MyTableDataRenderPolicy;
 
 public class TestUnderscore {
@@ -35,6 +38,9 @@ public class TestUnderscore {
 		}).chunk(2).value();
 		log.info("rtn={}", rtn);
 
+		String lastElement=$.last(strList);
+		log.info("lastElement={}", lastElement);
+		
 		List<String> spotList = $.chain(strList).filter(new com.github.underscore.Predicate<String>() {
 			public Boolean apply(String value) {
 				return value != null && value.startsWith("SPOT");
@@ -57,8 +63,23 @@ public class TestUnderscore {
 	}
 
 	@Test
-	public void testJava8Chunk() {
+	public void testJavaChunk() {
 		List<String> strList = getTestData();
+		Iterable<String> filterList = Iterables.filter(strList,new com.google.common.base.Predicate<String>(){
+			public boolean apply(String input) {
+				return input!=null;
+			}
+		});
+		List<List<String>> rtnList = Lists.partition(Lists.newArrayList(filterList),2);
+		log.info("rtn={}", rtnList);
+		
+		String lastElement = Iterables.getLast(strList);
+		log.info("lastElement={}", lastElement);
+		
+		String params="key1=value1&key2=value2&";
+		Map<String, String> paramMap = Splitter.on("&").omitEmptyStrings().withKeyValueSeparator("=").split(params);
+		log.info("paramMap={}", paramMap);
+		
 		Function<String, java.util.function.Predicate<String>> startsWithLetter = letter -> name -> name != null
 				&& name.startsWith(letter);
 		List<String> spotList = strList.stream().filter(startsWithLetter.apply("SPOT"))
@@ -123,7 +144,7 @@ public class TestUnderscore {
 	}
 
 	private List<String> getTestData() {
-		return Arrays.asList("SPOT001", "FWD002", "SWAP003", "SPOT004", "FWD005", null, "SWAP007", "FWD008", "AA",
-				"BB");
+		return new ArrayList<String>(Arrays.asList("SPOT001", "FWD002", "SWAP003", "SPOT004", "FWD005", null, "SWAP007", "FWD008", "AA",
+				"BB"));
 	}
 }
