@@ -41,6 +41,28 @@ public class TestJanino {
 		mainMethod.invoke(null, (Object) new String[] {});
 	}
 
+	@Test
+	public void testJaninoParseJavaCode2() throws Exception {
+		SimpleCompiler compiler = new SimpleCompiler();
+		String javaCodeStr = getHelloWordCode2();
+		compiler.cook(new StringReader(javaCodeStr));
+		Class<?> clss = compiler.getClassLoader().loadClass("com.test.MyStringTrim");
+		log.info("class name={}", clss.getName());
+		Method mainMethod = clss.getDeclaredMethod("trimStr", String.class);
+		String result=(String) mainMethod.invoke(clss.newInstance(), "   test  ");
+		log.info("result={}", result);
+	}
+	
+	private String getHelloWordCode2() {
+		String str = "package com.test;\n" + "\n" + "import org.apache.commons.lang3.StringUtils;\n"
+				+ "import org.slf4j.Logger;\n" + "import org.slf4j.LoggerFactory;\n" + "\n"
+				+ "public class MyStringTrim {\n"
+				+ "  private static final Logger logger = LoggerFactory.getLogger(MyStringTrim.class);\n" + "\n"
+				+ "  public String trimStr(String str){\n" + "    if(str==null){\n" + "      return null;\n" + "    }\n"
+				+ "    logger.info(\"trimStr str={}\",str);\n" + "    return StringUtils.trim(str);\n" + "  }\n" + "}";
+		return str;
+	}
+	
 	private String getHelloWordCode() {
 		MethodSpec main = MethodSpec.methodBuilder("main").addModifiers(Modifier.PUBLIC, Modifier.STATIC)
 				.returns(void.class).addParameter(String[].class, "args")
