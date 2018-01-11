@@ -1,4 +1,4 @@
-package janino;
+package com.janino;
 
 import java.io.StringReader;
 import java.lang.reflect.Method;
