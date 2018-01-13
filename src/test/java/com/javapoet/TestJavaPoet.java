@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.lang.model.element.Modifier;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -27,6 +29,7 @@ import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
 
 public class TestJavaPoet {
+	private static final Logger log = LoggerFactory.getLogger(TestJavaPoet.class);
 
 	@Test
 	public void testCreateJavaCode() {
@@ -43,7 +46,26 @@ public class TestJavaPoet {
 
 		TypeSpec clazz = myClazz(fieldList, methodList);
 		JavaFile file = JavaFile.builder("com.test.howtojavapoet", clazz).build();
-		System.out.println(file.toString());
+		
+		List<String> myImportList=new ArrayList<String>();
+		myImportList.add("org.apache.commons.lang3.StringUtils");
+		String myJavaCode=addDiyImport(file, myImportList);
+		log.info("rtn=\n{}",myJavaCode);
+	}
+
+	public String addDiyImport(JavaFile javaFile, List<String> imports) {
+		String rawSource = javaFile.toString();
+		List<String> result = new ArrayList<>();
+		for (String s : rawSource.split("\n", -1)) {
+			result.add(s);
+			if (s.startsWith("package ")) {
+				result.add("");
+				for (String i : imports) {
+					result.add("import " + i + ";");
+				}
+			}
+		}
+		return String.join("\n", result);
 	}
 
 	private TypeSpec myClazz(List<FieldSpec> fieldSpecList, List<MethodSpec> methodSpecList) {
