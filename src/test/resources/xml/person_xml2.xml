@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE message [
+        <!ENTITY xxe "lol,">
+        <!ENTITY xxe2 "&xxe;&xxe;&xxe;&xxe;&xxe;&xxe;&xxe;&xxe;&xxe;&xxe;">
+        <!ENTITY xxe3 "&xxe2;&xxe2;&xxe2;&xxe2;&xxe2;&xxe2;&xxe2;&xxe2;&xxe2;&xxe2;">
+        <!ENTITY xxe4 "&xxe3;&xxe3;&xxe3;&xxe3;&xxe3;&xxe3;&xxe3;&xxe3;&xxe3;&xxe3;">
+        <!ENTITY xxe5 "&xxe4;&xxe4;&xxe4;&xxe4;&xxe4;&xxe4;&xxe4;&xxe4;&xxe4;&xxe4;">
+        <!ENTITY xxe6 "&xxe5;&xxe5;&xxe5;&xxe5;&xxe5;&xxe5;&xxe5;&xxe5;&xxe5;&xxe5;">
+        <!ENTITY xxe7 "&xxe6;&xxe6;&xxe6;&xxe6;&xxe6;&xxe6;&xxe6;&xxe6;&xxe6;&xxe6;">
+        <!ENTITY xxe8 "&xxe7;&xxe7;&xxe7;&xxe7;&xxe7;&xxe7;&xxe7;&xxe7;&xxe7;&xxe7;">
+        <!ENTITY xxe9 "&xxe8;&xxe8;&xxe8;&xxe8;&xxe8;&xxe8;&xxe8;&xxe8;&xxe8;&xxe8;">
+        ]>
+<persons>
+    <person id="1">
+        <name>test_name1</name>
+        <address>test_address2</address>
+    </person>
+    <!-- 10*10*...个lol -->
+     <person id="2">
+        <name>test_name2</name>
+        <address>&xxe9;</address>
+    </person>
+</persons>

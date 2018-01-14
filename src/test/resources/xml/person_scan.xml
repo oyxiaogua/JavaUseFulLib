@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE test [
+        <!ENTITY xxe SYSTEM "file:///d:/" >
+        ]>
+<persons>
+    <person id="1">
+        <name>test_name1</name>
+        <address>test_address2</address>
+    </person>
+     <person id="2">
+        <name>test_name2</name>
+        <address>&xxe;</address>
+    </person>
+</persons>
