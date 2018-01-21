@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 import com.monitorjbl.xlsx.StreamingReader;
 import com.poi.excel.ReadExcelWithXSSFReader;
 import com.poi.excel.RowColLimitCheck;
-import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
+
+import cn.hutool.poi.excel.ExcelUtil;
 
 /**
  * 测试读取Excel

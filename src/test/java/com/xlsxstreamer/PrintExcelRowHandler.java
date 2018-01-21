@@ -5,7 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xiaoleilu.hutool.poi.excel.sax.handler.RowHandler;
+import cn.hutool.poi.excel.sax.handler.RowHandler;
 
 public class PrintExcelRowHandler implements RowHandler {
 	private static final Logger log = LoggerFactory.getLogger(TestXlsxStreamer.class);
