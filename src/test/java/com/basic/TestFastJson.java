@@ -1,6 +1,8 @@
 package com.basic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -11,13 +13,33 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.dfargx.TestDfargx;
+import com.orika.Name;
 
 public class TestFastJson {
-	private static final Logger log = LoggerFactory.getLogger(TestDfargx.class);
+	private static final Logger log = LoggerFactory.getLogger(TestFastJson.class);
 
 	@Test
-	public void testFastJsonJson2() throws Exception {
+	public void testFastJsonJsonReference() throws Exception {
+		List<Name> nameList = new ArrayList<Name>();
+		Name name = Name.random();
+		nameList.add(name);
+		nameList.add(name);
+		String rtn = JSON.toJSONString(nameList);
+		log.info("rtn={}", rtn);
+
+		List<Name> nameList2 = JSON.parseArray(rtn, Name.class);
+		log.info("rtn={}", nameList2);
+
+		rtn = JSON.toJSONString(nameList, SerializerFeature.DisableCircularReferenceDetect);
+		log.info("rtn={}", rtn);
+
+		nameList2 = JSON.parseArray(rtn, Name.class);
+		log.info("rtn={}", nameList2);
+
+	}
+
+	@Test
+	public void testFastJsonDoubleQuotationMarks() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String> aMap = new HashMap<String, String>();
 		aMap.put("key_1", "value_1\u0001\u0080\u0002");
@@ -28,11 +50,11 @@ public class TestFastJson {
 		JSONSerializer serializer = new JSONSerializer(out);
 		serializer.write(map);
 		String jsonStr = out.toString();
-		log.info("rtn={}", jsonStr);//key无引号
-		log.info("rtn={}", JSON.toJSON(map));//key有引号
+		log.info("rtn={}", jsonStr);// key无引号
+		log.info("rtn={}", JSON.toJSON(map));// key有引号
 		log.info("rtn={}", JSON.toJSONString(map));
-		
-		Map<String, Object> desMap =JSON.parseObject(jsonStr);
+
+		Map<String, Object> desMap = JSON.parseObject(jsonStr);
 		log.info("map={}", desMap);
 	}
 }
