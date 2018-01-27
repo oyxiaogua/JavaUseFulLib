@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -58,6 +59,40 @@ public class TestOrika {
 		Assert.assertEquals(person.getNameList().get(0).getLast(), personDest.getNameArr()[0][1]);
 		Assert.assertEquals(person.getNameList().get(1).getFirst(), personDest.getNameArr()[1][0]);
 		Assert.assertEquals(person.getNameList().get(1).getLast(), personDest.getNameArr()[1][1]);
+	}
+	
+	@Test
+	public void testOrikaCopy2() throws Exception {
+		// 生成随机内容
+		EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().seed(123L).objectPoolSize(100)
+				.randomizationDepth(3).charset(Charset.forName("UTF-8"))
+				.timeRange(LocalTime.of(11, 1), LocalTime.of(11, 30))
+				.dateRange(LocalDate.now(), LocalDate.now().plusMonths(2)).stringLengthRange(5, 50)
+				.collectionSizeRange(1, 10).scanClasspathForConcreteTypes(true).overrideDefaultInitialization(false)
+				.build();
+		Person person = enhancedRandom.nextObject(Person.class);
+		MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+		MapperFacade mapper = mapperFactory.getMapperFacade();
+		Person personDest = mapper.map(person, Person.class);
+		
+		Person personDest2=new Person();
+		BeanUtils.copyProperties(personDest2, person);
+		
+		Assert.assertEquals(person.getName().getFirst(), personDest.getName().getFirst());
+		Assert.assertEquals(person.getNameList().get(0).getLast(), personDest.getNameList().get(0).getLast());
+		
+		Assert.assertEquals(person.getName().getFirst(), personDest2.getName().getFirst());
+		Assert.assertEquals(person.getNameList().get(0).getLast(), personDest2.getNameList().get(0).getLast());
+		
+		person.getName().setFirst("myFirst");
+		person.getNameList().get(0).setLast("myLast");
+		//深复制
+		Assert.assertFalse(person.getName().getFirst().equals(personDest.getName().getFirst()));
+		Assert.assertFalse(person.getNameList().get(0).getLast().equals(personDest.getNameList().get(0).getLast()));
+	   
+		//浅复制
+		Assert.assertTrue(person.getName().getFirst().equals(personDest2.getName().getFirst()));
+		Assert.assertTrue(person.getNameList().get(0).getLast().equals(personDest2.getNameList().get(0).getLast()));
 	}
 	
 	@Test
