@@ -36,6 +36,8 @@
 		<javapoet.version>1.9.0</javapoet.version>
 		<commons-exec.version>1.3</commons-exec.version>
 		<rhino.version>1.7.8</rhino.version>
+		<lettuce.verion>5.0.2.RELEASE</lettuce.verion>
+		<commons-pool2.verion>2.5.0</commons-pool2.verion>
 	</properties>
 
 	<repositories>
@@ -43,13 +45,24 @@
 			<id>feilong-repository</id>
 			<url>https://raw.github.com/venusdrogon/feilong-platform/repository</url>
 		</repository>
+
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
 		<dependency>
-			<groupId>biz.paluch.redis</groupId>
-			<artifactId>lettuce</artifactId>
-			<version>5.0.0.Beta1</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>${commons-pool2.verion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.lettuce-io</groupId>
+			<artifactId>lettuce-core</artifactId>
+			<version>${lettuce.verion}</version>
 		</dependency>
 
 		<dependency>

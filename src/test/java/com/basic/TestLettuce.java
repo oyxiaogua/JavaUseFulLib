@@ -2,19 +2,23 @@ package com.basic;
 
 import java.util.List;
 
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.lambdaworks.redis.RedisClient;
-import com.lambdaworks.redis.RedisFuture;
-import com.lambdaworks.redis.RedisURI;
-import com.lambdaworks.redis.ScriptOutputType;
-import com.lambdaworks.redis.api.StatefulRedisConnection;
-import com.lambdaworks.redis.api.async.RedisAsyncCommands;
-import com.lambdaworks.redis.api.sync.RedisCommands;
-import com.lambdaworks.redis.api.sync.RedisStringCommands;
+
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.ScriptOutputType;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.api.sync.RedisStringCommands;
+import io.lettuce.core.support.ConnectionPoolSupport;
 
 public class TestLettuce {
 	private static final Logger log = LoggerFactory.getLogger(TestXmlXXE.class);
@@ -23,7 +27,7 @@ public class TestLettuce {
 	public void testLettuceBasicUsage() {
 		// RedisClient redisClient =
 		// RedisClient.create("redis://localhost:6379/0");
-		RedisURI redisUri = RedisURI.Builder.redis("localhost").withPort(6379).withDatabase(0).build();
+		RedisURI redisUri = getConfigRedisURI();
 		RedisClient redisClient = RedisClient.create(redisUri);
 		StatefulRedisConnection<String, String> connection = redisClient.connect();
 		RedisStringCommands<String, String> sync = connection.sync();
@@ -61,5 +65,38 @@ public class TestLettuce {
 		futureRtn.thenAccept((e) -> log.info("rtn={}",e));
 		connection.close();
 		redisClient.shutdown();
+	}
+
+	
+	@Test
+	public void testLettuceConnectionPool() throws Exception {
+		RedisURI redisUri = getConfigRedisURI();
+		RedisClient redisClient = RedisClient.create(redisUri);
+		GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport
+	               .createGenericObjectPool(() -> redisClient.connect(), new GenericObjectPoolConfig());
+		try (StatefulRedisConnection<String, String> connection = pool.borrowObject()) {
+		    RedisCommands<String, String> commands = connection.sync();
+		    commands.flushdb();
+		    
+		    commands.multi();
+		    commands.set("test_key_i_1","1");
+		    commands.set("test_key_2", "value2");
+		    commands.incr("test_key_i_1");
+		    commands.exec();
+		    
+		    String rtnVal = commands.get("test_key_i_1");
+			log.info("rtn={}", rtnVal);
+		}
+		pool.close();
+		redisClient.shutdown();
+	}
+	
+	/**
+	 * 获取初始化连接URI
+	 * @return
+	 */
+	private RedisURI getConfigRedisURI() {
+		RedisURI redisUri = RedisURI.Builder.redis("localhost").withPort(6379).withDatabase(0).build();
+		return redisUri;
 	}
 }
