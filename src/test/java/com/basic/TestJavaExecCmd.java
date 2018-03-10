@@ -1,6 +1,8 @@
 package com.basic;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Scanner;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -32,5 +34,21 @@ public class TestJavaExecCmd {
 		executor.execute(commandLine);
 		String rtn = new String(out.toByteArray(),"GBK");
 		log.info("result=\n{}",rtn);
+	}
+	
+	@Test
+	/**
+	 * 在指定文件夹下执行cmd命令
+	 * @throws Exception
+	 */
+	public void testExecCmdAtFixDir() throws Exception {
+		String dirPath = "D:/redis";
+		String cmdStr = "redis-server.exe redis.windows.conf";
+		Process p = Runtime.getRuntime().exec(new String[] { "cmd", "/c", cmdStr }, null, new File(dirPath));
+		Scanner sc = new Scanner(p.getInputStream());
+		while (sc.hasNextLine()) {
+			log.info(sc.nextLine());
+		}
+		sc.close();
 	}
 }
