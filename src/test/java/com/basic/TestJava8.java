@@ -1,6 +1,10 @@
 package com.basic;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -23,6 +27,18 @@ public class TestJava8 {
 	public void testFibonacciMemoOpt() {
 		long start = System.currentTimeMillis();
 		log.info("rtn={},cost time={}", fibonacciMemo(10), (System.currentTimeMillis() - start));
+	}
+
+	@Test
+	public void testJava8DateTime() {
+		String str = "Sun Feb 13 15:00:10 2011";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.US);
+		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+		log.info("dateTime={}", dateTime);
+
+		formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xx yyyy", Locale.US);
+		String rtnStr = formatter.format(ZonedDateTime.now());
+		log.info("rtnStr={}", rtnStr);
 	}
 
 	public static long factorialTailRecu(final long number) {
