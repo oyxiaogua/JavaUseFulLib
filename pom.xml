@@ -38,6 +38,7 @@
 		<rhino.version>1.7.8</rhino.version>
 		<lettuce.verion>5.0.2.RELEASE</lettuce.verion>
 		<commons-pool2.verion>2.5.0</commons-pool2.verion>
+		<emoji-java.version>4.0.0</emoji-java.version>
 	</properties>
 
 	<repositories>
@@ -53,6 +54,12 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.vdurmont</groupId>
+			<artifactId>emoji-java</artifactId>
+			<version>${emoji-java.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>

@@ -9,6 +9,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vdurmont.emoji.EmojiParser;
+import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
+
 public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJava8.class);
 
@@ -59,6 +62,17 @@ public class TestJavaBasicGrammar {
 		//\u2060 用来表示零宽不换行空格
 		str="\uFEFF\u2060";
 		log.info("rtnStr={}, length={}", str,str.length());
+	}
+	
+	@Test
+	public void testRemoveEmojiFromStr() {
+		String str = "test\uD83D\uDC66\uD83C\uDFFFaaa";
+		log.info("before process str={}", str);
+		String emojiStr = "An 😀awesome 😃string with a few 😉emojis!";
+		String rtnStr = EmojiParser.parseToAliases(emojiStr, FitzpatrickAction.REMOVE);
+		log.info("after parseToAliases str={}", rtnStr);
+		rtnStr = EmojiParser.removeAllEmojis(str);
+		log.info("after remove emoji str={}", rtnStr);
 	}
 	
 	/**
