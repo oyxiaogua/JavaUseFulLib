@@ -3,15 +3,21 @@ package com.basic;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Joiner;
 
 public class TestJava8 {
 	private static final Logger log = LoggerFactory.getLogger(TestJava8.class);
@@ -41,6 +47,31 @@ public class TestJava8 {
 		log.info("rtnStr={}", rtnStr);
 	}
 
+	@Test
+	public void testStringJoin() {
+		List<String> list = Arrays.asList("key1", "key2", null, "key3", "", "key4");
+		String rtnStr = list.stream().collect(Collectors.joining(","));
+		log.info("rtnStr={}", rtnStr);
+		
+		//多了最后一个逗号
+		StringBuilder sb = new StringBuilder();
+		list.forEach(val -> {
+			sb.append(val).append(",");
+		});
+		rtnStr=sb.toString();
+		log.info("rtnStr={}", rtnStr);
+		
+		StringJoiner strJor = new StringJoiner(",");
+		for(String str : list) {
+		    strJor.add(str);
+		}
+		rtnStr=strJor.toString();
+		log.info("rtnStr={}", rtnStr);
+		
+		rtnStr = Joiner.on(",").skipNulls().join(list);
+		log.info("rtnStr={}", rtnStr);
+	}
+	
 	public static long factorialTailRecu(final long number) {
 		return factorialTailRecursion(1, number).invoke();
 	}
