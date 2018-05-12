@@ -2,15 +2,32 @@ package com.basic;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
+import org.apache.poi.ss.formula.functions.T;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bean.PersonBean;
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
+import com.google.common.math.DoubleMath;
 import com.vdurmont.emoji.EmojiParser;
 import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
+
+import cn.hutool.json.JSONUtil;
+import io.github.benas.randombeans.api.EnhancedRandom;
 
 public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJava8.class);
@@ -73,6 +90,65 @@ public class TestJavaBasicGrammar {
 		log.info("after parseToAliases str={}", rtnStr);
 		rtnStr = EmojiParser.removeAllEmojis(str);
 		log.info("after remove emoji str={}", rtnStr);
+	}
+	
+	@Test
+	public void testHashMapPutAllObjectRef() {
+		Map<String, PersonBean> personMap = new HashMap<String, PersonBean>();
+		List<String> nameList=Lists.newArrayList("test_1","test_2","test_3");
+		PersonBean personOne=EnhancedRandom.random(PersonBean.class,"addressList");
+		personOne.setAddressList(nameList);
+		personMap.put("test_key_1", personOne);
+		log.info("before operrate map={}", JSONUtil.toJsonStr(personMap));
+		Map<String, PersonBean> anotherPersonMap = new HashMap<String, PersonBean>();
+		anotherPersonMap.putAll(personMap);
+		personMap.get("test_key_1").getAddressList().add("test_4");
+		log.info("after operrate map={}", JSONUtil.toJsonStr(anotherPersonMap));
+	}
+	
+	@Test
+	public void testOjectsEquals() {
+		String str=null;
+		String str2="test";
+		Assert.assertFalse(Objects.equal(str, str2));
+		Assert.assertTrue(Objects.equal(str, null));
+	}
+	@Test
+	public void testDoubleEqual() {
+		double score=1.23456d;
+		double score2=1.234559999d;
+		double e = 1.0E-8;
+		Assert.assertTrue(DoubleMath.fuzzyEquals(score, score2, e));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testCollectionsSortFailed() {
+		List<Integer> ases = new ArrayList<>(Arrays.asList(-1, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 1, 1, 0,
+				0, 0, 0, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1));
+		Collections.sort(ases, new Comparator<Integer>() {
+			public int compare(Integer a, Integer b) {
+				return a > b ? 1 : -1;
+			}
+		});
+	}
+	
+	@Test
+	public void testGenericsAndVarargs() {
+		List<String> rtnList = pickRandomTwoElement("test_1", "test_2", "test_3");
+		log.info("rtn={}",rtnList);
+	}
+	
+	@SuppressWarnings("hiding")
+	private <T> List<T> pickRandomTwoElement(T a, T b, T c) {
+		switch (ThreadLocalRandom.current().nextInt(3)) {
+		case 0:
+			return Lists.newArrayList(a,b);
+		case 1:
+			return Lists.newArrayList(a, c);
+		case 2:
+			return Lists.newArrayList(b, c);
+		}
+		throw new AssertionError();
 	}
 	
 	/**
