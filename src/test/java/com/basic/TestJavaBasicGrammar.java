@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -136,6 +135,25 @@ public class TestJavaBasicGrammar {
 	public void testGenericsAndVarargs() {
 		List<String> rtnList = pickRandomTwoElement("test_1", "test_2", "test_3");
 		log.info("rtn={}",rtnList);
+	}
+	
+	@Test
+	public void testConvertListToArray() {
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("1_key_1", "1_value_1");
+		map.put("1_key_2", "1_value_2");
+		mapList.add(map);
+		map = new HashMap<String, String>();
+		map.put("2_key_1", "2_value_1");
+		map.put("2_key_2", "2_value_2");
+		map.put("2_key_3", "2_value_3");
+		mapList.add(map);
+		String[][] strArr = new String[mapList.size()][];
+		for (int i = 0; i < mapList.size(); i++) {
+			strArr[i] = mapList.get(i).values().toArray(new String[mapList.get(i).values().size()]);
+		}
+		log.info("arr={}", Arrays.deepToString(strArr));
 	}
 	
 	@SuppressWarnings("hiding")

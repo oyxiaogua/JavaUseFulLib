@@ -2,6 +2,7 @@ package com.basic;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import cn.hutool.core.thread.NamedThreadFactory;
 
 
@@ -45,4 +47,43 @@ public class TestJavaThread {
 		executorSevice.shutdown();
 	}
 	
+	@Test(expected=NullPointerException.class)
+	public void testExecutorServiceExceptionHandlerWithSubmit() throws Exception {
+		ExecutorService executorSevice = Executors.newFixedThreadPool(1);
+		@SuppressWarnings("null")
+		Future<?> future = executorSevice.submit(() -> {
+			Object obj = null;
+			log.info("never run here={}", obj.toString());
+		});
+		//不调用get时候 不报异常
+		future.get();
+		executorSevice.shutdown();
+	}
+	
+	@SuppressWarnings("null")
+	@Test
+	public void testExecutorServiceExceptionHandlerWithExecute() throws Exception {
+		ExecutorService executorSevice = Executors.newFixedThreadPool(1);
+		executorSevice.execute(() -> {
+			Object obj = null;
+			log.info("never run here={}", obj.toString());
+		});
+		//日志报错
+		executorSevice.shutdown();
+	}
+	
+	@SuppressWarnings("null")
+	@Test
+	public void testExecutorServiceExceptionHandlerWithExecute2() throws Exception {
+		ExecutorService executorSevice = Executors.newFixedThreadPool(1, r -> {
+			Thread t = new Thread(r);
+			t.setUncaughtExceptionHandler((t1, e) -> log.error(t1 + " throws exception: " + e));
+			return t;
+		});
+		executorSevice.execute(() -> {
+			Object obj = null;
+			log.info("never run here={}", obj.toString());
+		});
+		executorSevice.shutdown();
+	}
 }
