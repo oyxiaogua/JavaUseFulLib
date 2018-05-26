@@ -1,5 +1,6 @@
 package com.basic;
 
+import java.awt.GraphicsEnvironment;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,7 +13,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -29,7 +33,7 @@ import cn.hutool.json.JSONUtil;
 import io.github.benas.randombeans.api.EnhancedRandom;
 
 public class TestJavaBasicGrammar {
-	private static final Logger log = LoggerFactory.getLogger(TestJava8.class);
+	private static final Logger log = LoggerFactory.getLogger(TestJavaBasicGrammar.class);
 
 	@Test
 	public void testDateFormat() {
@@ -132,6 +136,15 @@ public class TestJavaBasicGrammar {
 	}
 	
 	@Test
+	public void testCollectinsIsEmpty(){
+		List<String> list=null;
+	    Assert.assertTrue(CollectionUtils.isEmpty(list));
+	    list=new ArrayList<String>(32);
+	    Assert.assertTrue(CollectionUtils.isEmpty(list));
+	}
+	
+	
+	@Test
 	public void testGenericsAndVarargs() {
 		List<String> rtnList = pickRandomTwoElement("test_1", "test_2", "test_3");
 		log.info("rtn={}",rtnList);
@@ -154,6 +167,26 @@ public class TestJavaBasicGrammar {
 			strArr[i] = mapList.get(i).values().toArray(new String[mapList.get(i).values().size()]);
 		}
 		log.info("arr={}", Arrays.deepToString(strArr));
+	}
+	
+	@Test
+	public void testListSysCurrentFonts() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		//ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, classPathResource.getInputStream()));
+		for (String fontName : ge.getAvailableFontFamilyNames()) {
+			log.info("font name ={}", fontName);
+		}
+	}
+	
+	@Test
+	public void testRegexQE() {
+		//\Q \E表示二者之间的内容是正则表达式中的常量字符串
+		String str = "3\\Q.\\E14";
+		String inputStr = "3.14";
+		Pattern pattern = Pattern.compile(str);
+		Matcher matcher = pattern.matcher(inputStr);
+		Assert.assertTrue(matcher.find());
+		log.info("match result={}", matcher.group());
 	}
 	
 	@SuppressWarnings("hiding")

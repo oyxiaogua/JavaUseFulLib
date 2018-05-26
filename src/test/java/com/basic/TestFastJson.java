@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.bean.MsgBean;
 import com.orika.Name;
 
 public class TestFastJson {
@@ -56,5 +58,17 @@ public class TestFastJson {
 
 		Map<String, Object> desMap = JSON.parseObject(jsonStr);
 		log.info("map={}", desMap);
+	}
+	
+	@Test
+	public void testFastJsonParseObject() throws Exception {
+		String jsonStr = "{\"globalId\":123,\"__time__\":345,\"time__\":567}";
+		MsgBean msgBean = JSONObject.parseObject(jsonStr, MsgBean.class);
+		log.info("rtn={}",msgBean);
+		String jsonStr2= JSONObject.toJSONString(msgBean);  
+		log.info("rtn={}",jsonStr2);
+		msgBean = JSONObject.parseObject(jsonStr2, MsgBean.class);
+		log.info("rtn={}",msgBean);
+		
 	}
 }

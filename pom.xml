@@ -39,6 +39,7 @@
 		<lettuce.verion>5.0.2.RELEASE</lettuce.verion>
 		<commons-pool2.verion>2.5.0</commons-pool2.verion>
 		<emoji-java.version>4.0.0</emoji-java.version>
+		<spring.version>5.0.6.RELEASE</spring.version>
 	</properties>
 
 	<repositories>
@@ -54,6 +55,12 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.vdurmont</groupId>
 			<artifactId>emoji-java</artifactId>
