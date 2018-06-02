@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -59,16 +60,37 @@ public class TestFastJson {
 		Map<String, Object> desMap = JSON.parseObject(jsonStr);
 		log.info("map={}", desMap);
 	}
-	
+
 	@Test
 	public void testFastJsonParseObject() throws Exception {
 		String jsonStr = "{\"globalId\":123,\"__time__\":345,\"time__\":567}";
 		MsgBean msgBean = JSONObject.parseObject(jsonStr, MsgBean.class);
-		log.info("rtn={}",msgBean);
-		String jsonStr2= JSONObject.toJSONString(msgBean);  
-		log.info("rtn={}",jsonStr2);
+		log.info("rtn={}", msgBean);
+		String jsonStr2 = JSONObject.toJSONString(msgBean);
+		log.info("rtn={}", jsonStr2);
 		msgBean = JSONObject.parseObject(jsonStr2, MsgBean.class);
-		log.info("rtn={}",msgBean);
+		log.info("rtn={}", msgBean);
+	}
+
+	@Test
+	public void testFastJsonJsonObject() {
+		//JSONObject顺序问题
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("aaa", 111);
+		jsonObject.put("bbb", 222);
+		jsonObject.put("ccc", 333);
+		jsonObject.put("ddd", 444);
+		for (Entry<String, Object> entry : jsonObject.entrySet()) {
+			log.info("key={},value={}", entry.getKey(),entry.getValue());
+		}
 		
+		jsonObject = new JSONObject(true);
+		jsonObject.put("aaa", 111);
+		jsonObject.put("bbb", 222);
+		jsonObject.put("ccc", 333);
+		jsonObject.put("ddd", 444);
+		for (Entry<String, Object> entry : jsonObject.entrySet()) {
+			log.info("key={},value={}", entry.getKey(),entry.getValue());
+		}
 	}
 }
