@@ -36,6 +36,15 @@ public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaBasicGrammar.class);
 
 	@Test
+	public void testClassForName() throws Exception {
+		 Class.forName("com.bean.StaticFieldClass");
+		 log.info("-----------------------------------------");
+		 //没有对类进行初始化，只是把类加载到了虚拟机中
+         ClassLoader.getSystemClassLoader().loadClass("com.bean.StaticFieldClass");
+ 
+	}
+
+	@Test
 	public void testDateFormat() {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.ENGLISH);
 		String dateStr = df.format(new Date());
@@ -61,7 +70,7 @@ public class TestJavaBasicGrammar {
 		log.info("oneCharZeroWidthStr str={}, length={}", oneCharZeroWidthStr, oneCharZeroWidthStr.length());
 		byte[] bytes = oneCharZeroWidthStr.getBytes("UTF-8");
 		log.info("bytes length={},", bytes.length);
-		
+
 		String str = "a\u200Bb\u200Cc\u200Dd\uFEFFe";
 		log.info("str={}, length={}", str, str.length());
 
@@ -69,21 +78,22 @@ public class TestJavaBasicGrammar {
 		log.info("after remove space str={}, length={}", removeSpaceStr, removeSpaceStr.length());
 
 		String removeZeroWidthSpaceStr = str.replaceAll("[\u200B-\u200D\uFEFF]", "");
-		log.info("after remove zero width space str={}, length={}", removeZeroWidthSpaceStr,removeZeroWidthSpaceStr.length());
-	
-		String rtnStr=removeSupplementaryCharacter(str);
-		log.info("rtnStr={}, length={}", rtnStr,rtnStr.length());
-		
-		str="\u200B\u200C\u200D";
-		log.info("rtnStr={}, length={}", str,str.length());
-		str="\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f\u05b9\u05ba\u0606\u0607\u0608\u0609\u060a\u063b\u063c\u070f\u076e\u076f\u0770\u0771\u0772\u0773\u0774\u0775\u0776\u0777\u0778\u0779\u077a\u077b\u077c\u077d\u077e\u077f\u0a51\u200b\u200c\u200d\u200e\u200f\u2029\u202a\u202b\u202c\u202d";
-		log.info("rtnStr={}, length={}", str,str.length());
-		//\uFEFF 表示「零宽不换行空格（Zero Width No-Break Space
-		//\u2060 用来表示零宽不换行空格
-		str="\uFEFF\u2060";
-		log.info("rtnStr={}, length={}", str,str.length());
+		log.info("after remove zero width space str={}, length={}", removeZeroWidthSpaceStr,
+				removeZeroWidthSpaceStr.length());
+
+		String rtnStr = removeSupplementaryCharacter(str);
+		log.info("rtnStr={}, length={}", rtnStr, rtnStr.length());
+
+		str = "\u200B\u200C\u200D";
+		log.info("rtnStr={}, length={}", str, str.length());
+		str = "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f\u05b9\u05ba\u0606\u0607\u0608\u0609\u060a\u063b\u063c\u070f\u076e\u076f\u0770\u0771\u0772\u0773\u0774\u0775\u0776\u0777\u0778\u0779\u077a\u077b\u077c\u077d\u077e\u077f\u0a51\u200b\u200c\u200d\u200e\u200f\u2029\u202a\u202b\u202c\u202d";
+		log.info("rtnStr={}, length={}", str, str.length());
+		// \uFEFF 表示「零宽不换行空格（Zero Width No-Break Space
+		// \u2060 用来表示零宽不换行空格
+		str = "\uFEFF\u2060";
+		log.info("rtnStr={}, length={}", str, str.length());
 	}
-	
+
 	@Test
 	public void testRemoveEmojiFromStr() {
 		String str = "test\uD83D\uDC66\uD83C\uDFFFaaa";
@@ -94,12 +104,12 @@ public class TestJavaBasicGrammar {
 		rtnStr = EmojiParser.removeAllEmojis(str);
 		log.info("after remove emoji str={}", rtnStr);
 	}
-	
+
 	@Test
 	public void testHashMapPutAllObjectRef() {
 		Map<String, PersonBean> personMap = new HashMap<String, PersonBean>();
-		List<String> nameList=Lists.newArrayList("test_1","test_2","test_3");
-		PersonBean personOne=EnhancedRandom.random(PersonBean.class,"addressList");
+		List<String> nameList = Lists.newArrayList("test_1", "test_2", "test_3");
+		PersonBean personOne = EnhancedRandom.random(PersonBean.class, "addressList");
 		personOne.setAddressList(nameList);
 		personMap.put("test_key_1", personOne);
 		log.info("before operrate map={}", JSONUtil.toJsonStr(personMap));
@@ -108,23 +118,24 @@ public class TestJavaBasicGrammar {
 		personMap.get("test_key_1").getAddressList().add("test_4");
 		log.info("after operrate map={}", JSONUtil.toJsonStr(anotherPersonMap));
 	}
-	
+
 	@Test
 	public void testOjectsEquals() {
-		String str=null;
-		String str2="test";
+		String str = null;
+		String str2 = "test";
 		Assert.assertFalse(Objects.equal(str, str2));
 		Assert.assertTrue(Objects.equal(str, null));
 	}
+
 	@Test
 	public void testDoubleEqual() {
-		double score=1.23456d;
-		double score2=1.234559999d;
+		double score = 1.23456d;
+		double score2 = 1.234559999d;
 		double e = 1.0E-8;
 		Assert.assertTrue(DoubleMath.fuzzyEquals(score, score2, e));
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testCollectionsSortFailed() {
 		List<Integer> ases = new ArrayList<>(Arrays.asList(-1, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, -1, 0, 1, 1, 1, 0,
 				0, 0, 0, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1));
@@ -134,22 +145,21 @@ public class TestJavaBasicGrammar {
 			}
 		});
 	}
-	
+
 	@Test
-	public void testCollectinsIsEmpty(){
-		List<String> list=null;
-	    Assert.assertTrue(CollectionUtils.isEmpty(list));
-	    list=new ArrayList<String>(32);
-	    Assert.assertTrue(CollectionUtils.isEmpty(list));
+	public void testCollectinsIsEmpty() {
+		List<String> list = null;
+		Assert.assertTrue(CollectionUtils.isEmpty(list));
+		list = new ArrayList<String>(32);
+		Assert.assertTrue(CollectionUtils.isEmpty(list));
 	}
-	
-	
+
 	@Test
 	public void testGenericsAndVarargs() {
 		List<String> rtnList = pickRandomTwoElement("test_1", "test_2", "test_3");
-		log.info("rtn={}",rtnList);
+		log.info("rtn={}", rtnList);
 	}
-	
+
 	@Test
 	public void testConvertListToArray() {
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
@@ -168,19 +178,20 @@ public class TestJavaBasicGrammar {
 		}
 		log.info("arr={}", Arrays.deepToString(strArr));
 	}
-	
+
 	@Test
 	public void testListSysCurrentFonts() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		//ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, classPathResource.getInputStream()));
+		// ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
+		// classPathResource.getInputStream()));
 		for (String fontName : ge.getAvailableFontFamilyNames()) {
 			log.info("font name ={}", fontName);
 		}
 	}
-	
+
 	@Test
 	public void testRegexQE() {
-		//\Q \E表示二者之间的内容是正则表达式中的常量字符串
+		// \Q \E表示二者之间的内容是正则表达式中的常量字符串
 		String str = "3\\Q.\\E14";
 		String inputStr = "3.14";
 		Pattern pattern = Pattern.compile(str);
@@ -188,12 +199,12 @@ public class TestJavaBasicGrammar {
 		Assert.assertTrue(matcher.find());
 		log.info("match result={}", matcher.group());
 	}
-	
+
 	@SuppressWarnings("hiding")
 	private <T> List<T> pickRandomTwoElement(T a, T b, T c) {
 		switch (ThreadLocalRandom.current().nextInt(3)) {
 		case 0:
-			return Lists.newArrayList(a,b);
+			return Lists.newArrayList(a, b);
 		case 1:
 			return Lists.newArrayList(a, c);
 		case 2:
@@ -201,9 +212,10 @@ public class TestJavaBasicGrammar {
 		}
 		throw new AssertionError();
 	}
-	
+
 	/**
 	 * 删除零宽度字符
+	 * 
 	 * @param str
 	 * @return
 	 */

@@ -8,15 +8,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bean.UserBean;
 import com.google.common.base.Joiner;
 
 public class TestJava8 {
@@ -52,26 +55,69 @@ public class TestJava8 {
 		List<String> list = Arrays.asList("key1", "key2", null, "key3", "", "key4");
 		String rtnStr = list.stream().collect(Collectors.joining(","));
 		log.info("rtnStr={}", rtnStr);
-		
-		//多了最后一个逗号
+
+		// 多了最后一个逗号
 		StringBuilder sb = new StringBuilder();
 		list.forEach(val -> {
 			sb.append(val).append(",");
 		});
-		rtnStr=sb.toString();
+		rtnStr = sb.toString();
 		log.info("rtnStr={}", rtnStr);
-		
+
 		StringJoiner strJor = new StringJoiner(",");
-		for(String str : list) {
-		    strJor.add(str);
+		for (String str : list) {
+			strJor.add(str);
 		}
-		rtnStr=strJor.toString();
+		rtnStr = strJor.toString();
 		log.info("rtnStr={}", rtnStr);
-		
+
 		rtnStr = Joiner.on(",").skipNulls().join(list);
 		log.info("rtnStr={}", rtnStr);
 	}
-	
+
+	@Test(expected = Exception.class)
+	public void testFindUserCity() throws Exception {
+		UserBean user = null;
+		user = new UserBean("test", "123");
+		Optional.ofNullable(user).ifPresent(u -> {
+			log.info("user not null");
+		});
+		String city = findUserCity(user);
+		log.info("city={}", city);
+	}
+
+	@Test
+	public void testFindUserOrNew() {
+		UserBean user = null;
+		UserBean user2=findUserOrNew(user);
+		Assert.assertEquals("zhangsan2", user2.getName());
+	}
+
+	/**
+	 * 查找用户
+	 * @param user
+	 * @return
+	 */
+	public UserBean findUserOrNew(UserBean user) {
+		return Optional.ofNullable(user).filter(u -> "zhangsan".equals(u.getName())).orElseGet(() -> {
+			UserBean user1 = new UserBean();
+			user1.setName("zhangsan2");
+			return user1;
+		});
+	}
+
+	/**
+	 * 获取用户地址中的city
+	 * 
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	public String findUserCity(UserBean user) throws Exception {
+		return Optional.ofNullable(user).map(u -> u.getAddress()).map(a -> a.getCity())
+				.orElseThrow(() -> new Exception("取指错误"));
+	}
+
 	public static long factorialTailRecu(final long number) {
 		return factorialTailRecursion(1, number).invoke();
 	}
