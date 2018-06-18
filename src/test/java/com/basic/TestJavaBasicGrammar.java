@@ -37,11 +37,44 @@ public class TestJavaBasicGrammar {
 
 	@Test
 	public void testClassForName() throws Exception {
-		 Class.forName("com.bean.StaticFieldClass");
-		 log.info("-----------------------------------------");
-		 //没有对类进行初始化，只是把类加载到了虚拟机中
-         ClassLoader.getSystemClassLoader().loadClass("com.bean.StaticFieldClass");
- 
+		Class.forName("com.bean.StaticFieldClass");
+		log.info("-----------------------------------------");
+		// 没有对类进行初始化，只是把类加载到了虚拟机中
+		ClassLoader.getSystemClassLoader().loadClass("com.bean.StaticFieldClass");
+	}
+
+	@Test
+	/**
+	 * 测试正则捕获组
+	 */
+	public void testRegexCaptureGroup() {
+		String regexStr = "(?<year>\\d{4})-(?<md>(?<month>\\d{2})-(?<date>\\d{2}))";
+		String str = "2018-06-25";
+		Pattern pattern = Pattern.compile(regexStr);
+		Matcher matcher = pattern.matcher(str);
+		if (matcher.matches()) {
+			log.info("group(0) value={}", matcher.group(0));
+			log.info("group('year') value={}", matcher.group("year"));
+			log.info("group('md') value={}", matcher.group("md"));
+			log.info("group('month') value={}", matcher.group("month"));
+			log.info("group('date') value={}", matcher.group("date"));
+			log.info("------------------------------------------");
+			log.info("group(0) value={}", matcher.group(0));
+			log.info("group(1) value={}", matcher.group(1));
+			log.info("group(2) value={}", matcher.group(2));
+			log.info("group(3) value={}", matcher.group(3));
+			log.info("group(3) value={}", matcher.group(4));
+		}
+		log.info("------------------------------------------");
+		regexStr = "(?:\\d{4})-((\\d{2})-(\\d{2}))";
+		pattern = Pattern.compile(regexStr);
+		matcher = pattern.matcher(str);
+		if (matcher.matches()) {
+			log.info("group(0) value={}", matcher.group(0));
+			log.info("group(1) value={}", matcher.group(1));
+			log.info("group(2) value={}", matcher.group(2));
+			log.info("group(3) value={}", matcher.group(3));
+		}
 	}
 
 	@Test

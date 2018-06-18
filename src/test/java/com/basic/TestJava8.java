@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -89,12 +90,23 @@ public class TestJava8 {
 	@Test
 	public void testFindUserOrNew() {
 		UserBean user = null;
-		UserBean user2=findUserOrNew(user);
+		UserBean user2 = findUserOrNew(user);
 		Assert.assertEquals("zhangsan2", user2.getName());
+	}
+
+	@Test
+	public void testConcurrentSkipListMap() {
+		//key value不能为空
+		Map<String, String> map = new ConcurrentSkipListMap<String, String>();
+		for (int i = 0; i < 50; i++) {
+			map.put("key_" + i, "test" + i);
+		}
+		log.info("rtn={}",map.get("key_15"));
 	}
 
 	/**
 	 * 查找用户
+	 * 
 	 * @param user
 	 * @return
 	 */
