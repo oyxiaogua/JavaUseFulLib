@@ -27,7 +27,7 @@
 		<dfargx.version>0.2.1</dfargx.version>
 		<underscore-lodash.verion>1.28</underscore-lodash.verion>
 		<feilong-platform.version>1.10.6</feilong-platform.version>
-		<hutool.version>4.0.9</hutool.version>
+		<hutool.version>4.1.1</hutool.version>
 		<sequence.version>2.3.0</sequence.version>
 		<joor.version>0.9.7</joor.version>
 		<okio.version>1.13.0</okio.version>

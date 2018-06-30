@@ -2,6 +2,7 @@ package com.basic;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.Scanner;
 
 import org.apache.commons.exec.CommandLine;
@@ -50,5 +51,17 @@ public class TestJavaExecCmd {
 			log.info(sc.nextLine());
 		}
 		sc.close();
+	}
+	
+	@Test
+	public void testProcessBuilderRedirectInherit() throws Exception{
+		ProcessBuilder pb=new ProcessBuilder("cmd.exe","/c","tasklist");
+		//继承父进程 输出到控制台
+		pb.redirectOutput(Redirect.INHERIT);
+		
+		//重定向到文件 getInputStream为空
+		//File file=Paths.get("e:/test_tmp/test.log").toFile();
+		//pb.redirectOutput(file);
+		pb.start();
 	}
 }

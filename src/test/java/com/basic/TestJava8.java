@@ -52,6 +52,17 @@ public class TestJava8 {
 	}
 
 	@Test
+	public void testJava8FilterFunction() {
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		map.put(1, "test_1");
+		map.put(2, "value_2");
+		map.put(3, "tomcat");
+		map.put(4, "skill");
+		Map<Integer, String> rtnMap = map.entrySet().stream().filter(r -> r.getValue().startsWith("t"))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		log.info("rtnMap={}", rtnMap);
+	}
+	@Test
 	public void testStringJoin() {
 		List<String> list = Arrays.asList("key1", "key2", null, "key3", "", "key4");
 		String rtnStr = list.stream().collect(Collectors.joining(","));

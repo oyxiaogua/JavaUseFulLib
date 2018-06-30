@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.bean.PersonBean;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.math.DoubleMath;
 import com.vdurmont.emoji.EmojiParser;
 import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
@@ -75,6 +76,20 @@ public class TestJavaBasicGrammar {
 			log.info("group(2) value={}", matcher.group(2));
 			log.info("group(3) value={}", matcher.group(3));
 		}
+	}
+	
+	@Test
+	public void testFilterMapKeyOrValue(){
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		map.put(1, "test_1");
+		map.put(2, "value_2");
+		map.put(3, "tomcat");
+		map.put(4, "skill");
+		Map<Integer, String> rtnMap = Maps.filterKeys(map, r -> r > 3);
+		log.info("rtnMap={}", rtnMap);
+		
+		rtnMap = Maps.filterValues(map, r -> r.startsWith("t"));
+		log.info("rtnMap={}", rtnMap);
 	}
 
 	@Test
