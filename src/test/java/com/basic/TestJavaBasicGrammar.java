@@ -12,11 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -99,6 +101,9 @@ public class TestJavaBasicGrammar {
 		log.info("rtn={}", dateStr);
 		df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
 		dateStr = df.format(new Date());
+		log.info("rtn={}", dateStr);
+		
+		dateStr =FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss").format(new Date());
 		log.info("rtn={}", dateStr);
 	}
 
