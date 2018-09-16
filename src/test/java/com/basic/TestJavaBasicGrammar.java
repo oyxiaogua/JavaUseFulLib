@@ -1,7 +1,10 @@
 package com.basic;
 
 import java.awt.GraphicsEnvironment;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -105,6 +107,147 @@ public class TestJavaBasicGrammar {
 		
 		dateStr =FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss").format(new Date());
 		log.info("rtn={}", dateStr);
+	}
+
+	@Test
+	public void testUnicode(){
+		String str="\u00df";
+		log.info("b={}", str);
+		str="\u03c2";
+		log.info("c={}", str);
+		//unicode组合
+		str="\u0041";
+		log.info("a={}", str);
+		str="\u00c1";
+		log.info("a={}", str);
+		str="\u0041\u0301";
+		log.info("a={}", str);
+		//字符归一化
+		String eUnicode="\u0065\u0308";
+		log.info("e={}", eUnicode);
+		String eUnicodeN = Normalizer.normalize(eUnicode, Form.NFKC);
+		log.info("normalize e={}", eUnicodeN);
+		String eUnicode2="\u00eb";
+		log.info("e={}", eUnicode2);
+		String eUnicodeN2 = Normalizer.normalize(eUnicode2, Form.NFKC);
+		log.info("normalize e={}", eUnicodeN2);
+		log.info("eUnicode=eUnicode2 rtn={},eUnicodeN=eUnicodeN2 rtn={}",eUnicode.equals(eUnicode2),eUnicodeN.equals(eUnicodeN2));
+		
+		//e
+		str="\u1ec7";
+		log.info("e={}", str);
+		str="\u1EB9\u0302";
+		log.info("e={}", str);
+		str="\u00ea\u0323";
+		log.info("e={}", str);
+		str="\u0065\u0323\u0302";
+		log.info("e={}", str);
+		
+		str="\u26a0";
+		log.info("三角={}", str);
+		str="\u26a0\ufe0e";
+		log.info("三角={}", str);
+		str="\u26a0\ufe0f";
+		log.info("三角={}", str);
+		
+		char[] charArr = Character.toChars(0x1F601);
+		str = String.valueOf(charArr);
+		log.info("from codepoint str={},codePointAt(0)={}", str,str.codePointAt(0));
+		String rtnStr = EmojiParser.parseToAliases(str, FitzpatrickAction.REMOVE);
+		log.info("after parseToAliases str={}", rtnStr);
+
+		str="\u0338";
+		log.info("/={}", str);
+		str="\u2010";
+		log.info("-={}", str);
+		str="\u2019";
+		log.info("'={}", str);
+		str="\u2027";
+		log.info(".={}", str);
+		str="\u30ad";
+		log.info("≠={}", str);
+		str="\u200c";//零宽度非连接器
+		log.info("black={},length={}", str,str.length());
+		str="\u200d";//零宽度连接器
+		log.info("black={},length={}", str,str.length());
+		str="\u1F61C";
+		log.info("wc={},length={},charAt(0)={}", str,str.length(),str.charAt(0));
+		log.info("regex replace={}",str.replaceAll(".", "-"));
+		
+		log.info("str={}","\u206f");
+		for(int i=0x2000;i<=0x206f;i++){
+			charArr = Character.toChars(i);
+			str = String.valueOf(charArr);
+			log.info("{}={}___",i,str);
+		}
+		str="测试\u6D4B\u8BD5unicode";
+		log.info("str={}",fromUnicode(str));
+		str="\ud83d\udd11";
+		rtnStr = EmojiParser.parseToAliases(str, FitzpatrickAction.REMOVE);
+		log.info("after parseToAliases str={}", rtnStr);
+		log.info("UTF8: {}", bytesToBits(str.getBytes(Charset.forName("utf-8"))));
+		//前面FEFF大端在左(BOM)表示byte顺序 缺省时默认大端在左
+	    log.info("UTF16: {}", bytesToBits(str.getBytes(Charset.forName("utf-16"))));
+	    log.info("UTF32: {}", bytesToBits(str.getBytes(Charset.forName("utf-32"))));
+	}
+	
+	@Test
+	public void testIterateCodePoint() {
+		String str = "a中\ud83d\udd11a中";
+		for (int i = 0; i < str.length(); i++) {
+			int codePoint = str.codePointAt(i);
+			log.info("code point at {}: {},isSupplementaryCodePoint:{}", i, codePoint,Character.isSupplementaryCodePoint(codePoint));
+			if (Character.isSupplementaryCodePoint(codePoint)){
+				i++;
+			}
+		}
+		log.info(filterUtf8mb4(str));
+	}
+	
+	public String filterUtf8mb4(String str) {
+		final int LAST_BMP = 0xFFFF;//辅助平面大于FFFF
+		StringBuilder sb = new StringBuilder(str.length());
+		for (int i = 0; i < str.length(); i++) {
+			int codePoint = str.codePointAt(i);
+			if (codePoint < LAST_BMP) {
+				sb.appendCodePoint(codePoint);
+			} else {
+				i++;
+			}
+		}
+		return sb.toString();
+	}
+	
+	public String byteToBit(byte b) {
+        return ""
+                + (byte) ((b >> 7) & 0x1) + (byte) ((b >> 6) & 0x1)
+                + (byte) ((b >> 5) & 0x1) + (byte) ((b >> 4) & 0x1)
+                + (byte) ((b >> 3) & 0x1) + (byte) ((b >> 2) & 0x1)
+                + (byte) ((b >> 1) & 0x1) + (byte) ((b >> 0) & 0x1);
+    }
+
+    public String bytesToBits(byte[] bytes) {
+        String s = "";
+        for (byte b : bytes) {
+            s += byteToBit(b) + " ";
+        }
+        return s;
+    }
+    
+	private String fromUnicode(String unicode) {
+		// 其中\\\\u\\w{4}为匹配unicode，后面用X代替；((?!X).)*为否定向后（右）环视匹配，匹配不包含X的内容；((?!X).)*+中的加号为占有优先，放弃后续备用路径，提高正则表达式的效率
+		Pattern pattern = Pattern.compile("(((?!\\\\u\\w{4}).)*+)(\\\\u(\\w{4}+))?(((?!\\\\u\\w{4}).)*+)");
+		Matcher matcher = pattern.matcher(unicode);
+		StringBuffer buffer = new StringBuffer();
+		while (matcher.find()) {
+			buffer.append(matcher.group(1));
+			if (matcher.group(4) != null) {
+				char letter = (char) Integer.parseInt(matcher.group(4), 16);
+				buffer.append(letter);
+			}
+			buffer.append(matcher.group(5));
+		}
+		return buffer.toString();
 	}
 
 	/**
