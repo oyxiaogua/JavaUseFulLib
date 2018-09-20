@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,6 +95,24 @@ public class TestJavaBasicGrammar {
 		
 		rtnMap = Maps.filterValues(map, r -> r.startsWith("t"));
 		log.info("rtnMap={}", rtnMap);
+	}
+	
+	@Test
+	public void testSortMapByValue() {
+		Map<String, String> treeMap = new HashMap<String, String>();
+		treeMap.put("mad", "2");
+		treeMap.put("kitty", "3");
+		treeMap.put("cherry", "1");
+		treeMap.put("jack", "4");
+		List<Map.Entry<String, String>> list = new ArrayList<Map.Entry<String, String>>(treeMap.entrySet());
+		Collections.sort(list, new Comparator<Map.Entry<String, String>>() {
+			public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
+				return o1.getValue().compareTo(o2.getValue());
+			}
+		});
+		for (Map.Entry<String, String> mapping : list) {
+			log.info("key={},value={}",mapping.getKey(),mapping.getValue());
+		}
 	}
 
 	@Test
