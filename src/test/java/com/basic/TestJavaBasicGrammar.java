@@ -3,8 +3,11 @@ package com.basic;
 import java.awt.GraphicsEnvironment;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +43,16 @@ import io.github.benas.randombeans.api.EnhancedRandom;
 public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaBasicGrammar.class);
 
+	@Test
+	public void testThreadLocal() {
+		ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 0);
+		log.info("value={}",threadLocal.get());
+		threadLocal.set(16);
+		log.info("value={}",threadLocal.get());
+		threadLocal.remove();
+		log.info("value={}",threadLocal.get());
+	}
+	
 	@Test
 	public void testClassForName() throws Exception {
 		Class.forName("com.bean.StaticFieldClass");
@@ -127,7 +139,33 @@ public class TestJavaBasicGrammar {
 		dateStr =FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss").format(new Date());
 		log.info("rtn={}", dateStr);
 	}
+	
+	@Test
+	public void testNumberFormat(){
+		log.info("rtn={}", parseNumberComplete("12"));
+		log.info("rtn={}", parseNumberComplete("12abc"));
+		log.info("rtn={}", parseNumberComplete("abc12"));
+	}
+	
+	public Number parseNumberComplete(String str) {
+        ParsePosition pp = new ParsePosition(0);//从第一个字符开始解析
+        NumberFormat numberFormat = new DecimalFormat();
+        Number result = numberFormat.parse(str, pp);
+        return pp.getIndex() == str.length() ? result : null;
+    }
 
+	@Test
+	public void testCodePoint(){
+		String testCode = "ab\ud83d\ude03";
+        int total = testCode.codePointCount(0, testCode.length());
+        int index,codePoint;
+        for(int i = 0; i < total; i++) {
+            index = testCode.offsetByCodePoints(0, i);
+            codePoint = testCode.codePointAt(index);
+            log.info("index={},codepoint={}",index,codePoint);
+        }
+	}
+	
 	@Test
 	public void testUnicode(){
 		String str="\u00df";

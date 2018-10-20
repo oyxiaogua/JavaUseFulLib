@@ -40,6 +40,7 @@
 		<commons-pool2.verion>2.5.0</commons-pool2.verion>
 		<emoji-java.version>4.0.0</emoji-java.version>
 		<spring.version>5.0.6.RELEASE</spring.version>
+		<jackson.version>2.9.7</jackson.version>
 	</properties>
 
 	<repositories>
@@ -156,8 +157,20 @@
 			<groupId>com.github.jsurfer</groupId>
 			<artifactId>jsurfer-all</artifactId>
 			<version>${jsurfer-all.verion}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-databind</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
@@ -199,6 +212,12 @@
 			<groupId>io.github.benas</groupId>
 			<artifactId>random-beans</artifactId>
 			<version>${random-beans.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-databind</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -218,6 +237,12 @@
 			<groupId>com.monitorjbl</groupId>
 			<artifactId>xlsx-streamer</artifactId>
 			<version>${xlsx-streamer.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-databind</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
