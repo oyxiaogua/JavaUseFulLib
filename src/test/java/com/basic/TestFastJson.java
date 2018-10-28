@@ -1,10 +1,12 @@
 package com.basic;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -15,12 +17,37 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.bean.BigDecimalBean;
 import com.bean.MsgBean;
+import com.google.gson.Gson;
 import com.orika.Name;
 
 public class TestFastJson {
 	private static final Logger log = LoggerFactory.getLogger(TestFastJson.class);
 
+	
+	@Test
+	public void testFastJsonObjectKey() throws Exception {
+		Map<BigDecimalBean, String> map=new HashMap<BigDecimalBean, String>();
+		BigDecimalBean bean=new BigDecimalBean("testKey", "123.12");
+		map.put(bean, "testVal");
+		String jsonStr=JSON.toJSONString(map);
+		log.info("rtn={}", jsonStr);
+		JSONObject jsonObj = JSON.parseObject(jsonStr);
+		log.info("jsonobject={}",jsonObj);
+//		for (Entry<String, Object> entry : jsonObj.entrySet()) {
+//			log.info("jsonobject key={},value={},key type={}", entry.getKey(),entry.getValue(),entry.getKey().getClass());
+//		}
+		String gsonStr=new Gson().toJson(map);
+		log.info("gsonStr={}", gsonStr);
+		Map gsonMap = new Gson().fromJson(gsonStr, Map.class);
+		log.info("gsonMap={}", gsonMap);
+		Set<Map.Entry> set = gsonMap.entrySet();
+		for (Map.Entry entry :set) {
+			log.info("gsonMap key={},value={},key type={}", entry.getKey(),entry.getValue(),entry.getKey().getClass());
+		}
+	}
+	
 	@Test
 	public void testFastJsonJsonReference() throws Exception {
 		List<Name> nameList = new ArrayList<Name>();

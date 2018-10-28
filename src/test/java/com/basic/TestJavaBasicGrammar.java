@@ -1,6 +1,8 @@
 package com.basic;
 
 import java.awt.GraphicsEnvironment;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -14,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +46,26 @@ import io.github.benas.randombeans.api.EnhancedRandom;
 public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaBasicGrammar.class);
 
+	@Test
+	public void testDoubleMinValue(){
+		BigDecimal bigDecimal=new BigDecimal(Double.toString(Double.MIN_VALUE));
+		log.info("rtn={}",bigDecimal.toPlainString());
+		
+		bigDecimal=new BigDecimal(Double.toString(Double.MIN_NORMAL));
+		log.info("rtn={}",bigDecimal.toPlainString());
+	}
+	
+	@Test
+	public void testClassLoaderGetResources() throws Exception{
+		String name = "java/sql/Array.class";
+	    Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(name);
+	    URL url=null;
+	    while (urls.hasMoreElements()) {
+	        url = urls.nextElement();
+	        log.info("url={}",url.toString());
+	    }
+	}
+	
 	@Test
 	public void testThreadLocal() {
 		ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 0);
@@ -141,7 +164,9 @@ public class TestJavaBasicGrammar {
 	}
 	
 	@Test
-	public void testNumberFormat(){
+	public void testNumberFormat() throws Exception {
+		NumberFormat numberFormat = new DecimalFormat();
+		log.info("rtn={}", numberFormat.parse("12abc"));
 		log.info("rtn={}", parseNumberComplete("12"));
 		log.info("rtn={}", parseNumberComplete("12abc"));
 		log.info("rtn={}", parseNumberComplete("abc12"));
@@ -445,8 +470,8 @@ public class TestJavaBasicGrammar {
 	@Test
 	public void testRegexQE() {
 		// \Q \E表示二者之间的内容是正则表达式中的常量字符串
-		String str = "3\\Q.\\E14";
-		String inputStr = "3.14";
+		String str = "3\\Q.\\E14";//str="(3\\.14)";
+		String inputStr = "测试3.14";
 		Pattern pattern = Pattern.compile(str);
 		Matcher matcher = pattern.matcher(inputStr);
 		Assert.assertTrue(matcher.find());

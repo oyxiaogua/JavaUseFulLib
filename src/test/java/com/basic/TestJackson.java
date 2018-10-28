@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bean.BigDecimalBean;
 import com.bean.JacksonGetBean;
 import com.bean.MsgBean;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -19,6 +20,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class TestJackson {
 	private static final Logger log = LoggerFactory.getLogger(TestJackson.class);
 
+	@Test
+	public void testJacksonUseBigDecimalForFloats() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		BigDecimalBean bean = new BigDecimalBean("test_1", "2.00");
+		String jsonStr = mapper.writeValueAsString(bean);
+		BigDecimalBean b1 = mapper.readValue(jsonStr, BigDecimalBean.class);
+		log.info("json={},bean={}", jsonStr, b1);
+		mapper = new ObjectMapper();
+		mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+		b1 = mapper.readValue(jsonStr, BigDecimalBean.class);
+		log.info("json={},bean={}", jsonStr, b1);
+	}
+	
 	@Test
 	public void testJacksonParseObject() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();

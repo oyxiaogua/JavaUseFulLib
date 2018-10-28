@@ -9,6 +9,13 @@ public class TestString {
 	private static final Logger log = LoggerFactory.getLogger(TestXmlXXE.class);
 
 	@Test
+	public void testStringReplace(){
+		String s = "(1)(11)(111)(1)";
+		log.info("rtn={}",s.replace("(1)", "(2)"));
+		log.info("rtn={}",s.replaceAll("(1)", "(2)"));
+	}
+	
+	@Test
 	public void testStringConstantFolding(){
 		//常量折叠 编译期常量加减乘除的运算过程会被折叠
 		String a = "hello2";
