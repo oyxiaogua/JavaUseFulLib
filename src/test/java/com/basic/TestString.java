@@ -5,9 +5,23 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bean.StaticObjectBean;
+import com.bean.StaticStringBean;
+
 public class TestString {
 	private static final Logger log = LoggerFactory.getLogger(TestXmlXXE.class);
 
+	@Test
+	public void testStaticStringField(){
+		log.info("A={}",StaticObjectBean.A);
+		log.info("B={}",StaticObjectBean.B);
+		log.info("GetB={}",StaticObjectBean.getB());
+		
+		log.info("A={}",StaticStringBean.A);
+		log.info("B={}",StaticStringBean.B);
+		log.info("GetB={}",StaticStringBean.getB());
+	}
+	
 	@Test
 	public void testStringReplace(){
 		String s = "(1)(11)(111)(1)";
