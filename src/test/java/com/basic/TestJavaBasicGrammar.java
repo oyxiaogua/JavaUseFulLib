@@ -47,6 +47,19 @@ public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaBasicGrammar.class);
 
 	@Test
+	public void testListCopy(){
+		List<String> list=new ArrayList<String>();
+		list.add("test1");
+		list.add("test2");
+		
+		List<String> destList=new ArrayList<String>(Arrays.asList(new  String[list.size()]));
+		//浅复制
+		Collections.copy(destList, list);
+		list.set(0, "changeTest1");
+		log.info("rtn={}",destList.get(0));
+	}
+	
+	@Test
 	public void testDoubleMinValue(){
 		BigDecimal bigDecimal=new BigDecimal(Double.toString(Double.MIN_VALUE));
 		log.info("rtn={}",bigDecimal.toPlainString());

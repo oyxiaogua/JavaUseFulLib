@@ -1,5 +1,11 @@
 package com.basic;
 
+import java.nio.charset.StandardCharsets;
+import java.text.Collator;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Locale;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -11,6 +17,22 @@ import com.bean.StaticStringBean;
 public class TestString {
 	private static final Logger log = LoggerFactory.getLogger(TestXmlXXE.class);
 
+	@Test
+	public void testByteToStr(){
+		String str="测试";
+		byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+		String str2 = new String(bytes, StandardCharsets.UTF_8);
+		Assert.assertEquals(str2, str);
+	}
+	
+	@Test
+	public void testStrSort() {
+		String[] arr = { "1-测试", "1-编辑", "1-营销", "1结束", "2-测试", "1-qt" };
+		Comparator<String> c = (o1, o2) -> Collator.getInstance(Locale.CHINESE).compare(o1, o2);
+		Arrays.sort(arr, c);
+		log.info("rtn={}", Arrays.toString(arr));
+	}
+	
 	@Test
 	public void testStaticStringField(){
 		log.info("A={}",StaticObjectBean.A);

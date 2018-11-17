@@ -1,5 +1,6 @@
 package com.basic;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,6 +20,27 @@ import cn.hutool.core.thread.NamedThreadFactory;
 public class TestJavaThread {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaThread.class);
 
+	@Test
+	public void testThreadDeadLock() throws Exception{
+		ExecutorService executorSevice = Executors.newSingleThreadExecutor();
+		class OneCallable implements Callable<String>{
+	         public String call() throws Exception {
+	            Future<String> submit = executorSevice.submit(new TwoCallable());
+	            return "success:"+submit.get();
+	        }
+	    }
+		Future<String> submit = executorSevice.submit(new OneCallable());
+        log.info("rtn={}",submit.get());
+        executorSevice.shutdown();
+	}
+	
+	class TwoCallable implements Callable<String> {
+		public String call() throws Exception {
+			return "annother success";
+		}
+	}
+	
+	
 	@Test
 	/**
 	 * 线程自定义名字
