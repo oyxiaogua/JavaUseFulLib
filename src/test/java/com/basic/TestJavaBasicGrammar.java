@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bean.AddressBean;
 import com.bean.PersonBean;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
@@ -57,6 +58,13 @@ public class TestJavaBasicGrammar {
 		Collections.copy(destList, list);
 		list.set(0, "changeTest1");
 		log.info("rtn={}",destList.get(0));
+		
+		List<AddressBean> beanList=new ArrayList<AddressBean>();
+		AddressBean bean1=new AddressBean("1","2","3");
+		beanList.add(bean1);
+		List<AddressBean> beanList2=new ArrayList<AddressBean>(beanList);
+		bean1.setProvince("4");
+		log.info("rtn={}",beanList2.get(0));
 	}
 	
 	@Test

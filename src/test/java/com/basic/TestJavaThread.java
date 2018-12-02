@@ -40,6 +40,17 @@ public class TestJavaThread {
 		}
 	}
 	
+	@Test
+	public void testThreadNPE() throws Exception{
+		Thread prinThread = new Thread(new Runnable() {
+			public void run() {
+				 log.info("{} print hello",Thread.currentThread().getName());
+				 throw new NullPointerException();
+			}
+		});
+		prinThread.start();
+		TimeUnit.SECONDS.sleep(1);
+	}
 	
 	@Test
 	/**

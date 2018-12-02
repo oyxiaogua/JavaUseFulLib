@@ -41,4 +41,10 @@ public class AddressBean {
 		super();
 	}
 
+	public String toString() {
+		return "AddressBean [province=" + province + ", city=" + city + ", area=" + area + "]";
+	}
+	
+	
+
 }
