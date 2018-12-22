@@ -332,6 +332,11 @@ public class TestJavaBasicGrammar {
 		//前面FEFF大端在左(BOM)表示byte顺序 缺省时默认大端在左
 	    log.info("UTF16: {}", bytesToBits(str.getBytes(Charset.forName("utf-16"))));
 	    log.info("UTF32: {}", bytesToBits(str.getBytes(Charset.forName("utf-32"))));
+	    
+	    log.info("--------------------------------------------------");
+	    log.info("str={}","\u5DE5");//
+	    log.info("str={}","\u2F2F");//康熙字典部首
+	    
 	}
 	
 	@Test

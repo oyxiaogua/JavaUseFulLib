@@ -20,6 +20,75 @@ import cn.hutool.core.thread.NamedThreadFactory;
 public class TestJavaThread {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaThread.class);
 
+	private static ThreadLocal<String> strThreadLocal = new ThreadLocal<String>() {
+		protected String initialValue() {
+			return "initValue";
+		}
+	};
+	private static ThreadLocal<StringBuffer> strBufferThreadLocal = new ThreadLocal<StringBuffer>() {
+		protected StringBuffer initialValue() {
+			return new StringBuffer("initValue");
+		}
+	};
+	private static ThreadLocal<String> strInThreadLocal = new InheritableThreadLocal<String>() {
+		protected String initialValue() {
+			return "initValue";
+		}
+	};
+	
+	private static ThreadLocal<StringBuffer> strBufferInThreadLocal = new InheritableThreadLocal<StringBuffer>() {
+		protected StringBuffer initialValue() {
+			return new StringBuffer("initValue");
+		}
+	};
+	
+	@Test
+	public void testThreadLocalTransmitValue() throws Exception{
+		strThreadLocal.set("parentStr");
+		strBufferThreadLocal.set(new StringBuffer("parentStrBuffer"));
+		log.info("before parent thread name={},value={}",Thread.currentThread().getName(),strThreadLocal.get());
+		log.info("before parent thread name={},value={}",Thread.currentThread().getName(),strBufferThreadLocal.get());
+		for (int i = 0; i < 2; i++) {
+			new Thread(){
+				public void run() {
+					log.info("before child thread name={},value={}",Thread.currentThread().getName(),strThreadLocal.get());
+					log.info("before child thread name={},value={}",Thread.currentThread().getName(),strBufferThreadLocal.get());
+					strThreadLocal.set(Thread.currentThread().getName()+"childStr");
+					strBufferThreadLocal.get().append("|"+Thread.currentThread().getName()+"child|");
+					log.info("after child thread name={},value={}",Thread.currentThread().getName(),strThreadLocal.get());
+					log.info("after child thread name={},value={}",Thread.currentThread().getName(),strBufferThreadLocal.get());
+				}
+			}.start();
+		}
+		TimeUnit.SECONDS.sleep(2);
+		log.info("after parent thread name={},value={}",Thread.currentThread().getName(),strThreadLocal.get());
+		log.info("after parent thread name={},value={}",Thread.currentThread().getName(),strBufferThreadLocal.get());
+	}
+	
+	@Test
+	public void testInheritableThreadLocalTransmitValue() throws Exception{
+		strInThreadLocal.set("parentStr");
+		strBufferInThreadLocal.set(new StringBuffer("parentStrBuffer"));
+		log.info("before parent thread name={},value={}",Thread.currentThread().getName(),strInThreadLocal.get());
+		log.info("before parent thread name={},value={}",Thread.currentThread().getName(),strBufferInThreadLocal.get());
+		for (int i = 0; i < 2; i++) {
+			new Thread(){
+				public void run() {
+					log.info("before child thread name={},value={}",Thread.currentThread().getName(),strInThreadLocal.get());
+					log.info("before child thread name={},value={}",Thread.currentThread().getName(),strBufferInThreadLocal.get());
+					strInThreadLocal.set(Thread.currentThread().getName()+"childStr");
+					strBufferInThreadLocal.set(new StringBuffer("|"+Thread.currentThread().getName()+"child|"));
+					//strBufferInThreadLocal.get().append("|"+Thread.currentThread().getName()+"child|");
+					log.info("after child thread name={},value={}",Thread.currentThread().getName(),strInThreadLocal.get());
+					log.info("after child thread name={},value={}",Thread.currentThread().getName(),strBufferInThreadLocal.get());
+				}
+			}.start();
+		}
+		TimeUnit.SECONDS.sleep(2);
+		log.info("after parent thread name={},value={}",Thread.currentThread().getName(),strInThreadLocal.get());
+		log.info("after parent thread name={},value={}",Thread.currentThread().getName(),strBufferInThreadLocal.get());
+	}
+	
 	@Test
 	public void testThreadDeadLock() throws Exception{
 		ExecutorService executorSevice = Executors.newSingleThreadExecutor();
