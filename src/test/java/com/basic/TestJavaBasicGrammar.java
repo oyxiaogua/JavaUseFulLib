@@ -11,6 +11,10 @@ import java.text.Normalizer.Form;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,6 +51,19 @@ import io.github.benas.randombeans.api.EnhancedRandom;
 public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaBasicGrammar.class);
 
+	@Test
+	public void testIntOverFlow(){
+		BigDecimal bigDecimal=new BigDecimal(2L*Integer.MAX_VALUE);
+		log.info("int={}",bigDecimal.intValue());
+		
+		int intVa=(int) (Integer.MIN_VALUE + (bigDecimal.longValue() - Integer.MAX_VALUE) - 1);
+		log.info("int={}",intVa);
+		
+		log.info("rtn={}",Integer.MAX_VALUE);
+		log.info("rtn={}",Integer.MIN_VALUE);
+		log.info("rtn={}",Integer.MIN_VALUE+Integer.MAX_VALUE);
+	}
+	
 	@Test
 	public void testListCopy(){
 		List<String> list=new ArrayList<String>();
@@ -173,6 +190,7 @@ public class TestJavaBasicGrammar {
 
 	@Test
 	public void testDateFormat() {
+		//线程不安全
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.ENGLISH);
 		String dateStr = df.format(new Date());
 		log.info("rtn={}", dateStr);
@@ -182,6 +200,28 @@ public class TestJavaBasicGrammar {
 		
 		dateStr =FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss").format(new Date());
 		log.info("rtn={}", dateStr);
+		
+		//1970年1月1日0时0分0秒
+		Date date=new  Date(0);
+		dateStr =FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ssZ").format(date);
+		log.info("rtn={}", dateStr);
+		log.info("timestamp={}", date.getTime());
+		
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("America/Los_Angeles")); 
+		log.info("rtn={}", now);
+		//夏令时从3月第二个周日持续到11月第一个周日
+		
+		DateTimeFormatter fmt =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.now();
+        List<LocalDate> dateList = new ArrayList<>();
+        LocalDate tmpLocalDate=null;
+        for (int i = 0; i < 20; i++) {
+        	tmpLocalDate = localDate.plusDays(i);
+        	dateList.add(tmpLocalDate);
+        }
+        dateList.stream().forEach(day ->  log.info(day.format(fmt)));
+        log.info("------------------------------------------");
+        dateList.parallelStream().forEach(day ->  log.info(day.format(fmt)));
 	}
 	
 	@Test

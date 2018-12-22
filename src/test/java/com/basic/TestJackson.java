@@ -11,15 +11,35 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bean.AbstractFieldBean;
 import com.bean.BigDecimalBean;
 import com.bean.JacksonGetBean;
 import com.bean.MsgBean;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TestJackson {
 	private static final Logger log = LoggerFactory.getLogger(TestJackson.class);
-
+	@Test
+	public void testJacksonAbstractField() throws Exception{
+		AbstractFieldBean bean=new AbstractFieldBean(2);
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonStr = mapper.writeValueAsString(bean);
+		log.info("json={}", jsonStr);
+		AbstractFieldBean b1 = mapper.readValue(jsonStr, AbstractFieldBean.class);
+		log.info("bean={}", b1);
+		
+		JsonFactory factory = new JsonFactory();
+		factory.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+		mapper = new ObjectMapper(factory);
+		jsonStr=jsonStr.replace("\"", "'");
+		log.info("json={}", jsonStr);
+		b1 = mapper.readValue(jsonStr, AbstractFieldBean.class);
+		log.info("bean={}", b1);
+	}
+	
 	@Test
 	public void testJacksonUseBigDecimalForFloats() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();

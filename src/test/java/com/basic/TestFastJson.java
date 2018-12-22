@@ -1,6 +1,5 @@
 package com.basic;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +17,31 @@ import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bean.BigDecimalBean;
+import com.bean.JsonTestBean;
 import com.bean.MsgBean;
 import com.google.gson.Gson;
 import com.orika.Name;
 
 public class TestFastJson {
 	private static final Logger log = LoggerFactory.getLogger(TestFastJson.class);
-
+	@Test
+	public void testFastJsonMapLongKey() throws Exception {
+		JsonTestBean testBean=new JsonTestBean(1,"test1");
+		Map<Long, String> map=new HashMap<Long, String>();
+		map.put(Long.MAX_VALUE, "longMax");
+		map.put(0L+Integer.MIN_VALUE, "intMin");
+		testBean.setExtraMap(map);
+		String jsonStr=JSON.toJSONString(testBean);
+		log.info("fastjson json={}", jsonStr);
+		JsonTestBean testBean2=JSON.parseObject(jsonStr,JsonTestBean.class);
+		log.info("fastjson bean={}", testBean2);
+		
+		Gson gson = new Gson();
+		String gsonStr=gson.toJson(testBean);
+		log.info("gson json={}", jsonStr);
+		JsonTestBean testBean3=gson.fromJson(gsonStr, JsonTestBean.class);
+		log.debug("gson bean={}",testBean3);
+	}
 	
 	@Test
 	public void testFastJsonObjectKey() throws Exception {

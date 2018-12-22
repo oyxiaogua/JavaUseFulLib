@@ -37,7 +37,7 @@ public class TestScheduledFuture {
 			}
 		}, 10, TimeUnit.SECONDS);
 
-		TimeUnit.MINUTES.sleep(1);
+		TimeUnit.MINUTES.sleep(10);
 		service.shutdown();
 	}
 
@@ -78,4 +78,42 @@ public class TestScheduledFuture {
 		log.info("task three={} ", (futureThree == null ? null : futureThree.get(3,TimeUnit.SECONDS)));
 		executorService.shutdown();
 	}
+	
+	@Test
+	public void testFutureGetBlock2() throws Exception {
+		ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1L, TimeUnit.MINUTES,
+				new ArrayBlockingQueue<Runnable>(1), new ThreadPoolExecutor.AbortPolicy());
+		Future<?> futureOne = executorService.submit(new Runnable() {
+			public void run() {
+				log.info("start runable one");
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					log.error("futureOne interrupted", e);
+				}
+			}
+		});
+
+		Future<?> futureTwo = executorService.submit(new Runnable() {
+			public void run() {
+				log.info("start runable two");
+			}
+		});
+
+		Future<?> futureThree = null;
+		try {
+			futureThree = executorService.submit(new Runnable() {
+				public void run() {
+					log.info("start runable three");
+				}
+			});
+		} catch (Exception e) {
+			log.error("futureThree error", e);
+		}
+		log.info("task on={} ", futureOne.get());
+		log.info("task two={}", futureTwo.get());
+		log.info("task three={} ", (futureThree == null ? null : futureThree.get(3,TimeUnit.SECONDS)));
+		executorService.shutdown();
+	}
+	
 }
