@@ -52,6 +52,21 @@ public class TestJavaBasicGrammar {
 	private static final Logger log = LoggerFactory.getLogger(TestJavaBasicGrammar.class);
 
 	@Test
+	public void testFastThrow() {
+		for (int i = 0; i < 200000; i++) {
+			try {
+				((Object) null).getClass();
+			} catch (Exception e) {
+				if (e.getStackTrace().length == 0) {
+					log.info("stackTrace omit after {} times", i);
+					e.printStackTrace();
+					break;
+				}
+			}
+		}
+	}
+	
+	@Test
 	public void testIntOverFlow(){
 		BigDecimal bigDecimal=new BigDecimal(2L*Integer.MAX_VALUE);
 		log.info("int={}",bigDecimal.intValue());
@@ -353,6 +368,7 @@ public class TestJavaBasicGrammar {
 	}
 	
 	public String filterUtf8mb4(String str) {
+		//U+0000 到U+FFFF BMP平面字符
 		final int LAST_BMP = 0xFFFF;//辅助平面大于FFFF
 		StringBuilder sb = new StringBuilder(str.length());
 		for (int i = 0; i < str.length(); i++) {

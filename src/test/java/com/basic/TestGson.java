@@ -1,16 +1,42 @@
 package com.basic;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bean.BookBean;
+import com.bean.CalendarBean;
+import com.bean.CalendarSerializer;
 import com.bean.OrderBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class TestGson {
 	private static final Logger log = LoggerFactory.getLogger(TestFastJson.class);
+	
+	@Test
+	public void testGsonSerializedCalendar(){
+		CalendarBean bean=new CalendarBean();
+		bean.setName("test");
+		bean.setCreateDate(new Date());
+		bean.setCalendar(Calendar.getInstance());
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		String jsonStr=gson.toJson(bean);
+		log.debug("jsonStr={}",jsonStr);
+		CalendarBean newBean=gson.fromJson(jsonStr,CalendarBean.class);
+		log.debug("bean={}",newBean);
+		
+		gson = new GsonBuilder().registerTypeHierarchyAdapter(Calendar.class,
+                new CalendarSerializer()).setDateFormat("yyyy-MM-dd").create();
+		jsonStr=gson.toJson(bean);
+		log.debug("jsonStr={}",jsonStr);
+		newBean=gson.fromJson(jsonStr,CalendarBean.class);
+		log.debug("bean={}",newBean);
+	}
+	
 	@Test
 	public void testGsonSerializedName(){
 		BookBean book=new BookBean();
